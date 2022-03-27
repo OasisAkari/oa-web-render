@@ -2,6 +2,7 @@ const { resolve } = require('path')
 require('dotenv').config({ path: resolve(__dirname, '../', process.env.NODE_ENV === 'production' ? '.env.production' : '.env') })
 const express = require('express')
 
+const chrome = require('chrome-aws-lambda')
 const puppeteer = require('puppeteer-core')
 
 const app = express()
@@ -9,7 +10,7 @@ app.use(require('body-parser').json());
 (async () => {
   const browser = await puppeteer.launch({
     args: ['--no-sandbox', '--disable-setuid-sandbox'],
-    executablePath: process.env.CHROMIUM_PATH,
+    executablePath: await chrome.executablePath,
     headless: true
   });
   app.post('/page', async (req, res) => {
